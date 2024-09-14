@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "teviantest"
+version = "0.1.0"
+description = ""
+authors = ["Aleksandr Ryabinskii <olexander.rabota@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.112.2"
+sqlalchemy = "^2.0.32"
+pydantic = "^2.8.2"
+psycopg = "^3.2.1"
+pydantic-settings = "^2.4.0"
+stringcase = "^1.2.0"
+psycopg2 = "^2.9.9"
+uvicorn = "^0.30.6"
+asyncpg = "^0.29.0"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.11.2"
+pytest = "^8.3.2"
+black = "^24.8.0"
+alembic = "^1.13.2"
+pre-commit = "^3.8.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+files = "src/"
+ignore_missing_imports = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
