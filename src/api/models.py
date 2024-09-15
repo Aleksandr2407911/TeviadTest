@@ -1,8 +1,12 @@
 from pydantic import BaseModel
+import uuid
 
 class TaskCreate(BaseModel):
     name: str
-    all_faces: int = 0
-    male_female_faces: int = 0
-    average_age_male: int = 0
-    average_age_female: int = 0
+
+class ImageCreate(BaseModel):
+    name: str
+    task_id: uuid.UUID
+    
+class DeleteTask(BaseModel):
+    task_id: uuid.UUID
