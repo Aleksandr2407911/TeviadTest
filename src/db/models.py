@@ -8,6 +8,7 @@ from sqlalchemy.orm import (
     mapped_column,
 )
 from sqlalchemy import(
+    JSON,
     CheckConstraint,
     ForeignKey,
     Integer,
@@ -52,7 +53,7 @@ class Images(AbstractModel):
 
 class Faces(AbstractModel):
     image_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("images.id", ondelete="CASCADE"), nullable = False)
-    bounding_dox: Mapped[str] = mapped_column()
+    bounding_dox: Mapped[dict] = mapped_column(JSON)
     gender: Mapped[Gender] = mapped_column()
     age: Mapped[int] = mapped_column(CheckConstraint("age >= 1 AND age <= 200"), nullable=False)
 

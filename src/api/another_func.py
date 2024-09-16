@@ -30,19 +30,21 @@ def encode_image_to_base64(image_path):
         return base64.b64encode(image_file.read()).decode("utf-8")
 
 
-async def detect(token, image_file):
-    url = "https://backend.facecloud.tevian.ru/api/v1/detect"
+async def detect(token, file_path):
+    url = "https://backend.facecloud.tevian.ru/api/v1/detect?demographics=true"
     headers = {
         "Authorization": f"Bearer {token}",
         "accept": "application/json",
         "Content-Type": "image/jpeg"
     }
-    form_data = aiohttp.FormData()
-    form_data.add_field('file', image_file, content_type='image/jpeg')
+    with open(file_path, "rb") as image_file:
+        image_data = image_file.read()
 
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, headers=headers, data=form_data) as response:
+        async with session.post(url, headers=headers, data=image_data) as response:
             if response.status == 200:
-                return await response.json()
+                result = await response.json()
+                print("Response:", result)
+                return result
             else:
                 raise Exception(f"Error: {response.status} - {await response.text()}")

@@ -1,9 +1,8 @@
 from fastapi import Depends, HTTPException
-from src.db.models import Tasks
+from src.db.models import Faces, Images, Tasks
 from src.db.db import get_db
 from sqlalchemy.orm import Session
 from src.api.models import TaskCreate, ImageCreate, DeleteTask
-from src.db.models import Images
 from sqlalchemy.future import select
 
 async def create_task(task: TaskCreate, db: Session = Depends(get_db)):
@@ -33,3 +32,15 @@ async def delete_task(task: DeleteTask, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Task not found")
     await db.delete(task_to_delete)
     await db.commit()
+
+async def create_face(image_id, bounding_box, gender, age, db: Session = Depends(get_db)):
+    db_face = Faces(
+        image_id = image_id,
+        bounding_dox = bounding_box,
+        gender = gender,
+        age = age
+    )
+    db.add(db_face)
+    await db.commit()
+    await db.refresh(db_face)
+    return db_face
