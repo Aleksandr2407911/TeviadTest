@@ -1,14 +1,17 @@
+from typing import Any, Dict
+import uuid
 from fastapi import Depends, HTTPException
 from src.db.definitions import Gender
 from src.db.models import Faces, Images, Tasks
 from src.db.db import get_db
 from sqlalchemy.orm import Session
-from src.api.models import GetTask, TaskCreate, ImageCreate, DeleteTask
+from src.api.models import TaskCreate, ImageCreate, DeleteTask
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
-async def create_task(task: TaskCreate, db: Session = Depends(get_db)):
+async def create_task(task: TaskCreate, db: Session = Depends(get_db)) -> Tasks:
     db_task = Tasks(
         name=task.name,
     )
@@ -20,7 +23,7 @@ async def create_task(task: TaskCreate, db: Session = Depends(get_db)):
 
 async def create_images(
     task: ImageCreate, path_task: str, db: Session = Depends(get_db)
-):
+) -> Images:
     db_images = Images(name=task.name, path=path_task, task_id=task.task_id)
     db.add(db_images)
     await db.commit()
@@ -28,7 +31,7 @@ async def create_images(
     return db_images
 
 
-async def delete_task(task: DeleteTask, db: Session = Depends(get_db)):
+async def delete_task(task: DeleteTask, db: Session = Depends(get_db)) -> None:
     result = await db.execute(select(Tasks).where(Tasks.id == task.task_id))
     task_to_delete = result.scalars().first()
     if task_to_delete is None:
@@ -38,8 +41,12 @@ async def delete_task(task: DeleteTask, db: Session = Depends(get_db)):
 
 
 async def create_face(
-    image_id, bounding_box, gender, age, db: Session = Depends(get_db)
-):
+    image_id: uuid.UUID,
+    bounding_box: dict,
+    gender: str,
+    age: int,
+    db: Session = Depends(get_db),
+) -> Faces:
     db_face = Faces(
         image_id=image_id, bounding_dox=bounding_box, gender=gender, age=age
     )
@@ -49,7 +56,9 @@ async def create_face(
     return db_face
 
 
-async def get_task_details(task_id: GetTask, db: Session = Depends(get_db)):
+async def get_task_details(
+    task_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+) -> Dict[str, Any]:
     stmt = select(Tasks).options(selectinload(Tasks.images)).where(Tasks.id == task_id)
     result = await db.execute(stmt)
     task = result.scalars().first()

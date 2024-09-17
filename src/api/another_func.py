@@ -2,7 +2,7 @@ import aiohttp
 import base64
 
 
-async def get_token_tevian(email, password):
+async def get_token_tevian(email: str, password: str) -> str:
     url = "https://backend.facecloud.tevian.ru/api/v1/login"
     data = {"email": email, "password": password}
     async with aiohttp.ClientSession() as session:
@@ -14,12 +14,7 @@ async def get_token_tevian(email, password):
                 raise Exception(f"Error: {response.status} - {await response.text()}")
 
 
-def encode_image_to_base64(image_path):
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode("utf-8")
-
-
-async def detect(token, file_path):
+async def detect(token: str, file_path: str) -> dict:
     url = "https://backend.facecloud.tevian.ru/api/v1/detect?demographics=true"
     headers = {
         "Authorization": f"Bearer {token}",

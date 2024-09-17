@@ -1,5 +1,5 @@
 import os
-from typing import Annotated
+from typing import Annotated, Any, Dict
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from src.api.another_func import detect, get_token_tevian
 from src.api.auth import verify_credentials
@@ -33,10 +33,13 @@ async def load_images(
     file: UploadFile,
     data_image: Annotated[ImageCreate, Depends()],
     db: Session = Depends(get_db),
-):
+) -> Dict[str, str]:
 
-
-    if not file.filename.endswith(".jpg") and not file.filename.endswith(".jpeg"):
+    if (
+        not file.filename
+        or file.filename.endswith(".jpg")
+        and not file.filename.endswith(".jpeg")
+    ):
         raise HTTPException(
             status_code=400,
             detail=f"""File format not supported: {file.filename}. Please upload JPEG image only!""",
@@ -67,20 +70,16 @@ async def load_images(
         gender = data["demographics"]["gender"]
         face = await create_face(image.id, bounding_box, gender, age, db)
 
-    return {
-        "info ": "The image has been processed and added to the task"
-    }
+    return {"info ": "The image has been processed and added to the task"}
 
 
 @router.delete("/delete_task_use_id")
 async def delete_task_use_id(
     task_id: Annotated[DeleteTask, Depends()], db: Session = Depends(get_db)
-):
+) -> Dict[str, str]:
     try:
         await delete_task(task_id, db)
-        return {
-        "info ": "Task deleted"
-    }
+        return {"info ": "Task deleted"}
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail="Task not deleted")
@@ -89,7 +88,7 @@ async def delete_task_use_id(
 @router.get("/get_task")
 async def get_task_use_id(
     task: Annotated[GetTask, Depends()], db: AsyncSession = Depends(get_db)
-):
+) -> Dict[str, Any]:
     task_id = task.task_id
     try:
         task_details = await get_task_details(task_id, db)
