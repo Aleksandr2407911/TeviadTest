@@ -1,0 +1,23 @@
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Убедитесь, что путь к Dockerfile указан правильно
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db  # Зависимость от сервиса базы данных
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: sasha911
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Для сохранения данных между перезапусками
+
+volumes:
+  postgres_data:

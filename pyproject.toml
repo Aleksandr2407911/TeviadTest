@@ -18,14 +18,13 @@ uvicorn = "^0.30.6"
 asyncpg = "^0.29.0"
 python-multipart = "^0.0.9"
 aiohttp = "^3.10.5"
+alembic = "^1.13.2"
 
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.11.2"
 pytest = "^8.3.2"
 black = "^24.8.0"
-alembic = "^1.13.2"
-pre-commit = "^3.8.0"
 
 
 [build-system]

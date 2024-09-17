@@ -5,6 +5,7 @@ import secrets
 
 security = HTTPBasic()
 
+
 def verify_credentials(credentials: HTTPBasicCredentials = Depends(security)):
     correct_username = secrets.compare_digest(credentials.username, settings.USERNAME)
     correct_password = secrets.compare_digest(credentials.password, settings.PASSWORD)

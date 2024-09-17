@@ -1,4 +1,3 @@
-from pydantic import Extra
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -24,18 +23,27 @@ class LoggingSettings(BaseSettings):
     LOG_FILE: str = "app.log"
     LOG_ENCODING: str = "utf-8"
 
+
 class Auth(BaseSettings):
     USERNAME: str = "Misha"
-    PASSWORD: str = "misha_coder_911"
+    PASSWORD: str = "misha_coder1170"
+
 
 class ImagePath(BaseSettings):
-    IMAGE_PATH: str = r"C:\Users\Aleksandr Riabinskii\Documents\TevianTest\src\db\Images"
+    IMAGE_PATH: str = (
+        r"C:\Users\Aleksandr Riabinskii\Documents\TevianTest\src\db\Images"
+    )
+
 
 class AuthTevianSwagger(BaseSettings):
     TEVIAN_SWAGGER_EMAIL: str = "olexander.rabota@yandex.ru"
     TEVIAN_SWAGGER_PASSWORD: str = "password"
 
-class Settings(APISettings, DatabaseSettings, LoggingSettings, Auth, ImagePath, AuthTevianSwagger):
+
+class Settings(
+    APISettings, DatabaseSettings, LoggingSettings, Auth, ImagePath, AuthTevianSwagger
+):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
 
 settings = Settings()
