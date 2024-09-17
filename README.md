@@ -1,3 +1,7 @@
+<div id="header" align="center">
+  <img src="https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3JxcmYwdGhtc25oejZnMW9ienVncGcxbzRsa2lnemNlNjF2c2thcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/10zxDv7Hv5RF9C/giphy.gif" width="3000"/>
+</div>
+
 # Тестовое задание Tevian
 
 ## Постановка задачи
